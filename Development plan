@@ -1,0 +1,19 @@
+Task List
+1) Add event handlers
+2) Get input elements
+3) Add the new item to UI
+4) Add new item to our data Structure
+5) Calculate Budget
+6) Update The UI
+
+UI Module
+- Get Input values
+- Add the new item to UI
+- Update The UI
+
+Data Module
+- Add new item to our data Structure
+- Calculate Budget
+
+Controller Module
+- Add event handlers
