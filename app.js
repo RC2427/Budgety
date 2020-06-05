@@ -287,7 +287,7 @@ var appController = (function (budgetCtrl, UICtrl) {
             //Deleting item From UI
             UICtrl.deletedListitem(itemID);
 
-            //Updtaing UI
+            //Updating UI
             updateBudget();
         }
     };
