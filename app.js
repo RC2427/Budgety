@@ -5,8 +5,21 @@ var budgetController = (function () {
         this.id = id;
         this.value = value;
         this.description = description;
+        this.Percentage = -1;
     };
 
+    expense.prototype.calcPercentage = function(totalIncome){
+        if(totalIncome > 0){
+            this.Percentage = Math.round( (this.value / totalIncome) * 100);
+        }
+        else{
+            this.Percentage = -1;
+        }
+    };
+
+    expense.prototype.getPercentage = function(){
+        return this.Percentage;
+    };
 
     var income = function (id, value, description) {
         this.id = id;
@@ -89,6 +102,22 @@ var budgetController = (function () {
                 data.Percentage = -1;
             }
 
+
+        },
+
+        calculatePercentage: function(){
+            
+            data.allItems.exp.forEach(function(curr){
+                curr.calcPercentage(data.total_of_expinc.inc);
+            });
+        },
+
+        getFinalpercentage: function(){
+            var allPercentage = data.allItems.exp.map(function(curr){
+                return curr.getPercentage();
+            });
+
+            return allPercentage;
         },
 
         getBudget: function () {
@@ -181,12 +210,14 @@ var UIController = (function () {
             var fields, arrFields;
 
             fields = document.querySelectorAll(DOMStrings.inputDesc + ', ' + DOMStrings.inputVal)
-
+            
+            //Converting list to array 
             arrFields = Array.prototype.slice.call(fields);
             arrFields.forEach(function (curr, index, array) {
                 curr.value = "";
             });
 
+            //Setting Focus back to Description
             arrFields[0].focus();
         },
 
@@ -227,6 +258,7 @@ var appController = (function (budgetCtrl, UICtrl) {
 
         document.querySelector(DOM.inputButton).addEventListener('click', ctrlAdditem);
 
+        //Adding event For Enter Key
         document.addEventListener('keypress', function (event) {
             if (event.keyCode === 13 || event.which === 13) {
                 ctrlAdditem();
@@ -239,6 +271,7 @@ var appController = (function (budgetCtrl, UICtrl) {
     var updateBudget = function () {
         var budget;
         console.log('Calculating budget');
+
         // Calculate the Budget
         budgetCtrl.calculateBudget();
 
@@ -249,9 +282,22 @@ var appController = (function (budgetCtrl, UICtrl) {
         UICtrl.DisplayBudget(budget);
     };
 
+    var updatePercentages = function(){
+
+        // Calculating Percentages
+        budgetCtrl.calculatePercentage();
+
+        //Read Percentages from UI
+        var expPercentages = budgetCtrl.getFinalpercentage();
+
+        //Update Percentages
+        console.log(expPercentages);
+    };
+
     // Adding item To UI and Calclating Budget
     var ctrlAdditem = function () {
         var input, newItem;
+
         //Getting Input From UI
         input = UICtrl.getInput();
 
@@ -268,6 +314,7 @@ var appController = (function (budgetCtrl, UICtrl) {
 
             //Displaying And Updating Budget
             updateBudget();
+            updatePercentages();
         }
     };
 
@@ -287,8 +334,9 @@ var appController = (function (budgetCtrl, UICtrl) {
             //Deleting item From UI
             UICtrl.deletedListitem(itemID);
 
-            //Updating UI
+            //Updtaing UI
             updateBudget();
+            updatePercentages();
         }
     };
 
