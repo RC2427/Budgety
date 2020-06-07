@@ -165,6 +165,7 @@ var UIController = (function () {
         expenseLabel: '.budget__expenses--value',
         expPercentLabel: '.budget__expenses--percentage',
         incPercentLabel: '.budget__income--percentage',
+        expPercentagelistLabel : '.item__percentage ',
         container: '.container'
     };
 
@@ -236,6 +237,34 @@ var UIController = (function () {
             }
         },
 
+        displayExpPerc: function(Percentages){
+
+            var fields = document.querySelectorAll(DOMStrings.expPercentagelistLabel);
+
+            var nodeListForEach = function(list, callback){
+                for(var i = 0; i < list.length; i++){
+                    callback(list[i], i);
+                }
+            } 
+            
+            nodeListForEach(fields, function(current, index) {
+                
+                if (Percentages[index] > 0) {
+                    current.textContent = Percentages[index] + '%';
+                } else {
+                    current.textContent = '---';
+                }
+            });
+            
+        },
+
+        formatNumbers: function(num, type){
+
+            num = Math.abs(num);
+            num = num.toFixed(2);
+
+        },
+
         // Delete's element from UI's List
         deletedListitem: function (selectorID) {
             var parentEl;
@@ -291,7 +320,7 @@ var appController = (function (budgetCtrl, UICtrl) {
         var expPercentages = budgetCtrl.getFinalpercentage();
 
         //Update Percentages
-        console.log(expPercentages);
+        UICtrl.displayExpPerc(expPercentages);
     };
 
     // Adding item To UI and Calclating Budget
@@ -358,3 +387,5 @@ var appController = (function (budgetCtrl, UICtrl) {
 
 //initialising Events and Data
 appController.init();
+
+
