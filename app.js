@@ -421,4 +421,3 @@ var appController = (function (budgetCtrl, UICtrl) {
 
 //initialising Events and Data
 appController.init();
-
